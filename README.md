@@ -1,122 +1,35 @@
-# Demo Template
+# API Key Management System
 
-[한글 버전](README.kr.md)
+## Overview
 
-A Spring Boot based multi-module template project.
+기본적인 로그인 방식은 아이디와 비밀번호를 기반으로 구현되는 경우가 많습니다.
+하지만 API 서버는 이러한 방식으로는 보안성이 떨어질 수 있습니다. API 서버에는 API 키를 사용하여 인증하는 방식이 일반적입니다.
+이러한 API 키를 발급하고 관리하는 시스템을 구현하고자 합니다.
 
-This template provides a basic structure that follows domain-driven design while maintaining practicality.
+## Mission's
 
-## Project Structure
+- API를 아무나 마음대로 호출하지 못하게 한다.
+- 어떤 IP에서 요청이 오는지 확인하고 싶다.
+- API 호출 횟수를 제한하고 싶다
+- 비정상적인 API 호출을 감지하고 싶다
 
-```
-root/
-├── api/                # API module (web layer, executable module)
-├── core/
-│   ├── base/          # Common utilities
-│   └── domain/        # Pure domain logic, interface definitions
-└── storage/
-    └── rdb/           # Repository implementations
-```
+## Features
 
-## Core Design Principles
+### API 키 관리
 
-### 1. Domain-Centered Design
+API 키는 인증된 사용자에게만 발급됩니다. 이메일 인증을 통해 신원을 확인하고, 사용 목적과 용도에 맞는 권한을 부여합니다.
+발급된 키는 언제든 관리자가 제한하거나 폐기할 수 있습니다.
 
-```
-api -----> domain <----- base
-            ↑
-            |
-       storage/rdb
-```
+### IP 기반 접근 제어
 
-- Domain is the center of the project
-- Domain is separated from infrastructure through interfaces
-- Implementations depend on domain interfaces
+허용된 IP에서만 API를 호출할 수 있도록 제한합니다. IP 주소나 대역을 등록하여 관리할 수 있으며,
+등록되지 않은 IP에서의 접근은 모두 차단됩니다.
 
-### 2. Module Roles
+### 사용량 제한
 
-#### api
+API 호출 횟수를 제한하여 자원 낭비를 방지합니다. 사용량을 초과하는 요청은 차단합니다.
 
-- Application entry point
-- Handles web layer
-- Executable application
+### 이상 감지
 
-#### core/domain
-
-- Pure domain models
-- Repository interface definitions
-- Business logic implementation
-- Uses only JPA annotations (no implementation)
-
-#### core/base
-
-- Common utilities
-- Provides common functionality needed by domain
-
-#### storage/rdb
-
-- Repository interface implementation
-- Includes JPA implementation
-- Actual database integration
-
-### 3. Dependency Management
-
-#### api/build.gradle
-
-```gradle
-dependencies {
-    runtimeOnly(project(":storage:rdb"))    // Implementation needed only at runtime
-    implementation project(':core:base')     // Compile-time dependency
-    implementation project(':core:domain')
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-}
-```
-
-#### core/domain/build.gradle
-
-```gradle
-dependencies {
-    implementation project(':core:base')
-    implementation 'org.springframework:spring-context'
-    compileOnly 'jakarta.persistence:jakarta.persistence-api'  // JPA annotations only
-}
-```
-
-#### storage/rdb/build.gradle
-
-```gradle
-dependencies {
-    implementation project(':core:domain')   // Implements domain interfaces
-    implementation project(':core:base')
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'com.h2database:h2'         // DB driver
-}
-```
-
-## Key Features
-
-### 1. Domain Purity
-
-- Domain logic does not depend on infrastructure
-- Loose coupling through Repository interfaces
-- Structure focused on business logic
-
-### 2. Runtime Dependency Management
-
-- Separation of compile-time and runtime dependencies
-- Storage implementation injected only at runtime
-- Flexible implementation management using Spring DI
-
-### 3. Easy Extension
-
-- Easy to add new storage implementations
-- Infrastructure layer can be changed without affecting domain logic
-
-## Configuration File Management
-
-- api/application.yml: Basic configuration
-- storage/rdb/application-rdb.yml: DB related configuration
-- Configuration separation through profiles
-
-This template provides a structure that follows the core principles of domain-driven design while enabling practical
-implementation.
+비정상적인 API 호출 패턴을 감지하고 대응합니다. 과도한 호출이나 의심스러운 패턴이 발견되면
+즉시 차단하고 관리자에게 알립니다.

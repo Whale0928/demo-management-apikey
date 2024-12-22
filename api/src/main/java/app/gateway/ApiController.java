@@ -1,4 +1,4 @@
-package app;
+package app.gateway;
 
 import app.base.Base;
 import app.base.BaseService;

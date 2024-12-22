@@ -1,4 +1,4 @@
-rootProject.name = 'demo-template'
+rootProject.name = 'demo-management-apikey'
 
 include('api')
 include('core:base')
