@@ -1,0 +1,6 @@
+rootProject.name = 'demo-template'
+
+include('api')
+include('core:base')
+include('core:domain')
+include('storage:rdb')

@@ -1,0 +1,14 @@
+// api
+bootJar.enabled = true
+jar.enabled = false
+
+dependencies {
+    runtimeOnly(project(":storage:rdb"))
+
+    implementation project(':core:base')
+    implementation project(':core:domain')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
+
+tasks.register("prepareKotlinBuildScriptModel") {}
