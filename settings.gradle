@@ -3,4 +3,5 @@ rootProject.name = 'demo-management-apikey'
 include('api')
 include('core:base')
 include('core:domain')
+include('security')
 include('storage:rdb')

@@ -1,7 +1,6 @@
-package app;
+package app.key;
 
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +9,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-@Slf4j
 @Component
-public class APIKeyGenerator {
+public class APIKeyGenerator implements KeyGenerator {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
     private final String salt;
@@ -30,32 +28,31 @@ public class APIKeyGenerator {
      * 솔트가 적용된 API 키를 생성합니다.
      * 형식: Base64(randomBytes + SHA-256(randomBytes + salt))의 첫 32바이트
      */
-    public String generateApiKey() {
-        try {
-            // 랜덤 바이트 생성
-            byte[] randomBytes = new byte[16];
-            secureRandom.nextBytes(randomBytes);
+    @Override
+    public String generateApiKey() throws NoSuchAlgorithmException {
+        // 랜덤 바이트 생성
+        byte[] randomBytes = new byte[16];
+        secureRandom.nextBytes(randomBytes);
 
-            // 솔트를 적용한 해시 생성
-            MessageDigest digest = MessageDigest.getInstance(algorithm);
-            digest.update(randomBytes);
-            digest.update(salt.getBytes());
-            byte[] hash = digest.digest();
+        // 솔트를 적용한 해시 생성
+        MessageDigest digest = MessageDigest.getInstance(algorithm);
+        digest.update(randomBytes);
+        digest.update(salt.getBytes());
+        byte[] hash = digest.digest();
 
-            // 랜덤 바이트와 해시를 조합
-            byte[] combined = new byte[32];
-            System.arraycopy(randomBytes, 0, combined, 0, randomBytes.length);
-            System.arraycopy(hash, 0, combined, randomBytes.length, 16);
+        // 랜덤 바이트와 해시를 조합
+        byte[] combined = new byte[32];
+        System.arraycopy(randomBytes, 0, combined, 0, randomBytes.length);
+        System.arraycopy(hash, 0, combined, randomBytes.length, 16);
 
-            return encoder.encodeToString(combined);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("알 수 없는 알고리즘입니다.", e);
-        }
+        return encoder.encodeToString(combined);
+
     }
 
     /**
      * API 키가 유효한지 검증합니다.
      */
+    @Override
     public boolean validateApiKey(String apiKey) {
         try {
             // Base64 디코딩

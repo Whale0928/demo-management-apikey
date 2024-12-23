@@ -1,15 +1,10 @@
-// api module
-bootJar.enabled = true
-jar.enabled = false
-
+// security module
 dependencies {
-    runtimeOnly(project(":storage:rdb"))
-    implementation project(':security')
     implementation project(':core:base')
     implementation project(':core:domain')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}

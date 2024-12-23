@@ -20,6 +20,8 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
@@ -73,5 +75,16 @@ public class Client {
 
     public void incrementRequestCount(int count) {
         this.requestCount += count;
+    }
+
+    public Optional<ClientMeta> extractMetaInfo() {
+        return Optional.of(ClientMeta.builder()
+                .email(email)
+                .issuerInfo(issuerInfo)
+                .permissions(Arrays.stream(permissions).map(PermissionsType::name).toList())
+                .allowedIps(Arrays.asList(allowedIps))
+                .issuedAt(issuedAt.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                .build()
+        );
     }
 }
