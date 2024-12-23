@@ -4,7 +4,6 @@ jar.enabled = false
 
 dependencies {
     runtimeOnly(project(":storage:rdb"))
-
     implementation project(':core:base')
     implementation project(':core:domain')
 

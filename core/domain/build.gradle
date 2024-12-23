@@ -2,8 +2,11 @@
 dependencies {
     implementation project(':core:base')
 
+    //hibernate
     implementation 'org.springframework:spring-context:6.2.0'
-    compileOnly 'jakarta.persistence:jakarta.persistence-api:3.1.0'  // JPA 어노테이션만
+    implementation 'org.hibernate:hibernate-core:6.6.4.Final'
+    implementation  'io.hypersistence:hypersistence-utils-hibernate-63:3.8.2'
+    compileOnly 'jakarta.persistence:jakarta.persistence-api:3.1.0'
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}

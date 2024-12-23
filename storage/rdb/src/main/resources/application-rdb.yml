@@ -1,13 +1,32 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:test
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USER:local_postgres}
+    password: ${DB_PASSWORD:local_postgres}
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+      ddl-auto: none
+
+  # p6spy 설정 추가
+  sleuth:
+    jdbc:
+      p6spy:
+        tracing:
+          include-parameter-values: true
+
+decorator:
+  datasource:
+    p6spy:
+      enable: true
+      enable-logging: true
+      multiline: true
+      logging: slf4j
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: off
+    org.hibernate.type.descriptor.sql.BasicBinder: off
+    p6spy: debug

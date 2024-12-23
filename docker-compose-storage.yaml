@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: 'generic-postgres'
+    environment:
+      - 'POSTGRES_DB=postgres'
+      - 'POSTGRES_PASSWORD=local_postgres'
+      - 'POSTGRES_USER=local_postgres'
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - '5432:5432'
+  redis:
+    image: 'redis:latest'
+    container_name: 'generic-redis'
+    ports:
+      - '6379:6379'

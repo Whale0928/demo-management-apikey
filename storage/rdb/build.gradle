@@ -3,10 +3,16 @@ dependencies {
     implementation project(':core:domain')
     implementation project(':core:base')
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
     implementation 'org.springframework:spring-context:6.2.0'
-    runtimeOnly 'com.h2database:h2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql' //dev
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.8.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    //p6spy
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+    implementation 'com.github.gavlyukovskiy:datasource-decorator-spring-boot-autoconfigure:1.9.2'
+
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}

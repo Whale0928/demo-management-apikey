@@ -1,0 +1,84 @@
+package app;
+
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Base64;
+
+@Slf4j
+@Component
+public class APIKeyGenerator {
+    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+    private final String salt;
+    private final String algorithm;
+
+    public APIKeyGenerator(
+            @Value("${keycode}") String salt,
+            @Value("${algorithm}") String algorithm
+    ) {
+        this.salt = salt;
+        this.algorithm = algorithm;
+    }
+
+    /**
+     * 솔트가 적용된 API 키를 생성합니다.
+     * 형식: Base64(randomBytes + SHA-256(randomBytes + salt))의 첫 32바이트
+     */
+    public String generateApiKey() {
+        try {
+            // 랜덤 바이트 생성
+            byte[] randomBytes = new byte[16];
+            secureRandom.nextBytes(randomBytes);
+
+            // 솔트를 적용한 해시 생성
+            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            digest.update(randomBytes);
+            digest.update(salt.getBytes());
+            byte[] hash = digest.digest();
+
+            // 랜덤 바이트와 해시를 조합
+            byte[] combined = new byte[32];
+            System.arraycopy(randomBytes, 0, combined, 0, randomBytes.length);
+            System.arraycopy(hash, 0, combined, randomBytes.length, 16);
+
+            return encoder.encodeToString(combined);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("알 수 없는 알고리즘입니다.", e);
+        }
+    }
+
+    /**
+     * API 키가 유효한지 검증합니다.
+     */
+    public boolean validateApiKey(String apiKey) {
+        try {
+            // Base64 디코딩
+            byte[] decoded = Base64.getUrlDecoder().decode(apiKey);
+            if (decoded.length != 32) return false;
+
+            // 랜덤 부분과 해시 부분 분리
+            byte[] randomPart = new byte[16];
+            System.arraycopy(decoded, 0, randomPart, 0, 16);
+
+            // 해시 재생성
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            digest.update(randomPart);
+            digest.update(salt.getBytes());
+            byte[] expectedHash = digest.digest();
+
+            // 해시 비교
+            byte[] actualHash = new byte[16];
+            System.arraycopy(decoded, 16, actualHash, 0, 16);
+
+            return MessageDigest.isEqual(actualHash, java.util.Arrays.copyOf(expectedHash, 16));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}
