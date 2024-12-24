@@ -1,8 +1,8 @@
-CREATE SEQUENCE clients_id_seq;
+CREATE SEQUENCE clients_id_seq AS BIGINT;
 
 create table clients
 (
-    id           integer      not null default nextval('clients_id_seq'),
+    id            bigint       not null default nextval('clients_id_seq'),
     name         varchar(255) not null,
     email        varchar(255) not null unique,
     api_key      varchar(512) not null unique,
@@ -10,6 +10,6 @@ create table clients
     permissions  text array,
     allowed_ips  text array,
     issued_at    timestamp,
-    requestCount bigint,
+    request_count bigint,
     expires_at   timestamp
 );

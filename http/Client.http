@@ -1,17 +1,17 @@
-### Hello Client
-GET  {{host}}/clients
+### Variables
+@host = http://localhost:8081
+@contentType = application/json
 
-### Client 생성 요청
-POST {{host}}/client/register
-Content-Type: application/json
+### Hello Client
+GET {{host}}/clients
+
+### Client 성공 케이스
+POST {{host}}/clients
+Content-Type: {{contentType}}
 
 {
-  "name": "청와대 공식 키",
-  "email": "webmaster@president.go.kr",
-  "issuerInfo": "청와대",
-  "allowedIps": [
-    "127.0.0.1",
-    "1.227.0.0.1",
-    "242.101.0.1"
-  ]
+    "name": "A청와대 공식 키",
+    "email": "Awebmaster@president.go.kr",
+    "issuerInfo": "청와대",
+    "allowedIps": ["127.0.0.1", "1.227.0.0.1", "242.101.0.1"]
 }

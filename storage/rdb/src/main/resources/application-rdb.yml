@@ -5,9 +5,9 @@ spring:
     username: ${DB_USER:local_postgres}
     password: ${DB_PASSWORD:local_postgres}
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
 
   # p6spy 설정 추가
   sleuth:

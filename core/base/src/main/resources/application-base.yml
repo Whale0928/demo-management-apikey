@@ -1,2 +1,2 @@
-keycode: ${KEYCODE:123456}
-algorithm: ${ALGORITHM:SHA-256}
+keycode: 123456
+algorithm: SHA-256

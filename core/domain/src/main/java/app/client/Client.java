@@ -1,8 +1,11 @@
 package app.client;
 
 
+import app.converter.IpAddressConverter;
+import app.type.IpAddress;
 import io.hypersistence.utils.hibernate.type.array.StringArrayType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,7 +41,7 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_id_seq")
     @SequenceGenerator(name = "clients_id_seq", sequenceName = "clients_id_seq", allocationSize = 1)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -61,7 +64,8 @@ public class Client {
     @Comment("허용 IP")
     @Type(StringArrayType.class)
     @Column(name = "allowed_ips", nullable = false, columnDefinition = "_text")
-    private String[] allowedIps;
+    @Convert(converter = IpAddressConverter.class)
+    private IpAddress[] allowedIps;
 
     @Builder.Default
     @Comment("발급일시")
