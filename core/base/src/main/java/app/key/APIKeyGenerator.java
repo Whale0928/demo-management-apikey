@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+
 @Slf4j
 @Component
 public class APIKeyGenerator implements KeyGenerator {
@@ -46,11 +47,7 @@ public class APIKeyGenerator implements KeyGenerator {
         System.arraycopy(randomBytes, 0, combined, 0, randomBytes.length);
         System.arraycopy(hash, 0, combined, randomBytes.length, 16);
 
-            return encoder.encodeToString(combined);
-        } catch (NoSuchAlgorithmException e) {
-            log.error("알 수 없는 알고리즘입니다.", e.getMessage());
-            throw new RuntimeException("알 수 없는 알고리즘입니다.", e);
-        }
+        return encoder.encodeToString(combined);
     }
 
     /**
