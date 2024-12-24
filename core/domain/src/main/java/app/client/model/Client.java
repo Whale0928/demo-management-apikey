@@ -1,15 +1,13 @@
-package app.client;
+package app.client.model;
 
 
-import io.hypersistence.utils.hibernate.type.array.StringArrayType;
+import app.dto.response.ClientMetaResponse;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,11 +15,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
@@ -36,9 +34,9 @@ import static lombok.AccessLevel.PROTECTED;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_id_seq")
-    @SequenceGenerator(name = "clients_id_seq", sequenceName = "clients_id_seq", allocationSize = 1)
-    private Long id;
+    @Builder.Default
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
 
     @Column(nullable = false)
     private String name;
@@ -52,16 +50,11 @@ public class Client {
     @Column(name = "issuer_info", nullable = false)
     private String issuerInfo;
 
-    @Comment("권한")
-    @Type(StringArrayType.class)
-    @Enumerated(EnumType.STRING)
-    @Column(name = "permissions", nullable = false, columnDefinition = "_text")
-    private PermissionsType[] permissions;
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClientPermission> permissions = new HashSet<>();
 
-    @Comment("허용 IP")
-    @Type(StringArrayType.class)
-    @Column(name = "allowed_ips", nullable = false, columnDefinition = "_text")
-    private String[] allowedIps;
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClientAllowedIp> allowedIps = new HashSet<>();
 
     @Builder.Default
     @Comment("발급일시")
@@ -73,14 +66,22 @@ public class Client {
     @Column(name = "request_count")
     private Long requestCount = 0L;
 
-    public Optional<ClientMeta> extractMetaInfo() {
-        return Optional.of(ClientMeta.builder()
+    public ClientMetaResponse extractMetaInfo() {
+        return ClientMetaResponse.builder()
+                .id(id)
                 .email(email)
                 .issuerInfo(issuerInfo)
-                .permissions(Arrays.stream(permissions).map(PermissionsType::name).toList())
-                .allowedIps(Arrays.asList(allowedIps))
+                .permissions(permissions.stream().map(p -> p.getId().getPermission().name()).toList())
+                .allowedIps(allowedIps.stream().map(i -> i.getId().getIpAddress()).toList())
                 .issuedAt(issuedAt.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
-                .build()
-        );
+                .build();
+    }
+
+    public void addPermission(ClientPermission... permission) {
+        this.permissions.addAll(Set.of(permission));
+    }
+
+    public void addAllowedIp(ClientAllowedIp... allowedIp) {
+        this.allowedIps.addAll(Set.of(allowedIp));
     }
 }

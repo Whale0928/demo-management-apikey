@@ -1,7 +1,7 @@
 package app.security;
 
-import app.client.ClientMeta;
-import app.client.ClientReader;
+import app.client.reader.ClientReader;
+import app.dto.response.ClientMetaResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class AuthenticationService {
             throw new BadCredentialsException("api key required");
         }
 
-        ClientMeta meta = clientReader.readByApiKey(apiKey)
+        ClientMetaResponse meta = clientReader.readByApiKey(apiKey)
                 .orElseThrow(() -> new BadCredentialsException("not fount client key:" + apiKey));
 
         ApiKeyAuthentication.Principal principal = ApiKeyAuthentication.Principal.builder()

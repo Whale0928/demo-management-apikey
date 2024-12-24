@@ -1,6 +1,7 @@
-package app.client;
+package app.client.model;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ClientRepository {
     Optional<Client> findByEmail(String email);
@@ -13,5 +14,5 @@ public interface ClientRepository {
 
     Client save(Client client);
 
-    Optional<Client> findById(Integer id);
+    Optional<Client> findById(UUID id);
 }
