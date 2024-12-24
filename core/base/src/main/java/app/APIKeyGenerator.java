@@ -1,6 +1,5 @@
 package app;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -49,6 +48,7 @@ public class APIKeyGenerator {
 
             return encoder.encodeToString(combined);
         } catch (NoSuchAlgorithmException e) {
+            log.error("알 수 없는 알고리즘입니다.", e.getMessage());
             throw new RuntimeException("알 수 없는 알고리즘입니다.", e);
         }
     }
