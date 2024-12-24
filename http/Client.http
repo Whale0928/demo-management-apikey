@@ -25,6 +25,10 @@ POST {{host}}/clients/random
 ###  클라이언트 정보 조회
 GET {{host}}/clients/{{id}}
 
-###  클라이언트 정보 조회
-GET {{host}}/api
+###  클라이언트 정보 조회 A
+GET {{host}}/api/A
+X-API-KEY: {{apiKey}}
+
+###  클라이언트 정보 조회 B
+GET {{host}}/api/B
 X-API-KEY: {{apiKey}}
