@@ -1,0 +1,92 @@
+version: '3.7'
+services:
+  # Master nodes
+  markab: # 페가수스 알파성, 말의 어깨를 표시
+    image: redis:7.0
+    container_name: markab
+    ports:
+      - "16379:6379"
+    command: >
+      redis-server 
+      --port 6379 
+      --requirepass demo-mutil-redis-cluster
+      --masterauth demo-mutil-redis-cluster
+      --cluster-enabled yes 
+      --cluster-config-file nodes.conf 
+      --cluster-node-timeout 5000
+    networks:
+      - pegasus-net
+  scheat: # 페가수스 베타성, 말의 다리 부분
+    image: redis:7.0
+    container_name: scheat
+    ports:
+      - "16380:6379"
+    command: >
+      redis-server 
+      --port 6379 
+      --requirepass demo-mutil-redis-cluster
+      --masterauth demo-mutil-redis-cluster
+      --cluster-enabled yes 
+      --cluster-config-file nodes.conf 
+      --cluster-node-timeout 5000
+    networks:
+      - pegasus-net
+  algenib: # 페가수스 감마성, 날개 끝 부분
+    image: redis:7.0
+    container_name: algenib
+    ports:
+      - "16381:6379"
+    command: >
+      redis-server 
+      --port 6379 
+      --requirepass demo-mutil-redis-cluster
+      --masterauth demo-mutil-redis-cluster
+      --cluster-enabled yes 
+      --cluster-config-file nodes.conf 
+      --cluster-node-timeout 5000
+    networks:
+      - pegasus-net
+  alpheratz: # 페가수스 델타성, 말의 머리 부분
+    image: redis:7.0
+    container_name: alpheratz
+    ports:
+      - "16382:6379"
+    command: >
+      redis-server 
+      --port 6379 
+      --requirepass demo-mutil-redis-cluster
+      --masterauth demo-mutil-redis-cluster
+      --cluster-enabled yes 
+      --cluster-config-file nodes.conf 
+      --cluster-node-timeout 5000
+    networks:
+      - pegasus-net
+
+  # Cluster initializer
+  pegasus-builder:
+    image: redis:7.0
+    container_name: pegasus-builder
+    networks:
+      - pegasus-net
+    depends_on:
+      - markab
+      - scheat
+      - algenib
+      - alpheratz
+    command: >
+      /bin/sh -c '
+      sleep 5 &&
+      redis-cli --cluster create 
+      markab:6379 
+      scheat:6379 
+      algenib:6379 
+      alpheratz:6379 
+      --cluster-replicas 1 
+      --pass demo-mutil-redis-cluster
+      -a demo-mutil-redis-cluster
+      '
+
+
+networks:
+  pegasus-net:
+    driver: bridge
