@@ -1,8 +1,6 @@
 // core: base
 dependencies {
-    //content
-    implementation 'org.springframework:spring-context:6.2.0'
-    implementation 'org.springframework:spring-beans:6.2.0'
+
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}

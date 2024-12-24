@@ -20,4 +20,5 @@ public class ClientController {
     public ResponseEntity<?> helloClient() {
         return ResponseEntity.ok(clientReader.helloClient());
     }
+
 }
