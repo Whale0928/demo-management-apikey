@@ -1,14 +1,14 @@
 package app.dto.command;
 
-import app.type.IpAddress;
 import lombok.Builder;
+
+import java.util.List;
 
 @Builder
 public record ClientRegistrationCommand(
         String name,
         String email,
         String issuerInfo,
-                IpAddress[] allowedIps
-
+        List<String> allowedIps
 ) {
 }

@@ -1,11 +1,8 @@
 package app.client;
 
 
-import app.converter.IpAddressConverter;
-import app.type.IpAddress;
 import io.hypersistence.utils.hibernate.type.array.StringArrayType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -64,8 +61,7 @@ public class Client {
     @Comment("허용 IP")
     @Type(StringArrayType.class)
     @Column(name = "allowed_ips", nullable = false, columnDefinition = "_text")
-    @Convert(converter = IpAddressConverter.class)
-    private IpAddress[] allowedIps;
+    private String[] allowedIps;
 
     @Builder.Default
     @Comment("발급일시")
@@ -76,10 +72,6 @@ public class Client {
     @Comment("요청 횟수")
     @Column(name = "request_count")
     private Long requestCount = 0L;
-
-    public void incrementRequestCount(int count) {
-        this.requestCount += count;
-    }
 
     public Optional<ClientMeta> extractMetaInfo() {
         return Optional.of(ClientMeta.builder()

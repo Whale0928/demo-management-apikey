@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  mysql:
+    image: 'mysql:8.0'
+    container_name: 'generic-mysql'
+    environment:
+      - 'MYSQL_DATABASE=generic'
+      - 'MYSQL_PASSWORD=local1234'
+      - 'MYSQL_USER=generic'
+      - 'MYSQL_ROOT_PASSWORD=root1234'
+    volumes:
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - '3306:3306'

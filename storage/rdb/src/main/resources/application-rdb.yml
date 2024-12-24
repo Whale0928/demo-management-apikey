@@ -1,20 +1,20 @@
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${DB_USER:local_postgres}
-    password: ${DB_PASSWORD:local_postgres}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/generic}
+    username: ${DB_USER:generic}
+    password: ${DB_PASSWORD:local1234}
   jpa:
     open-in-view: false
     hibernate:
       ddl-auto: validate
 
-  # p6spy 설정 추가
-  sleuth:
-    jdbc:
-      p6spy:
-        tracing:
-          include-parameter-values: true
+    # p6spy 설정 추가
+    sleuth:
+      jdbc:
+        p6spy:
+          tracing:
+            include-parameter-values: true
 
 decorator:
   datasource:
