@@ -9,6 +9,7 @@ import java.util.UUID;
 public record ClientMetaResponse(
         UUID id,
         String email,
+        String apiKey,
         String issuerInfo,
         List<String> permissions,
         List<String> allowedIps,

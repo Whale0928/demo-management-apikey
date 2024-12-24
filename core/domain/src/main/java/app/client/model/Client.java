@@ -70,6 +70,7 @@ public class Client {
         return ClientMetaResponse.builder()
                 .id(id)
                 .email(email)
+                .apiKey(apiKey)
                 .issuerInfo(issuerInfo)
                 .permissions(permissions.stream().map(p -> p.getId().getPermission().name()).toList())
                 .allowedIps(allowedIps.stream().map(i -> i.getId().getIpAddress()).toList())

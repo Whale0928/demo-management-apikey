@@ -2,6 +2,7 @@
 @host = http://localhost:8081
 @contentType = application/json
 @id = c47ccf98-ad70-4c3d-be82-86e485cc9535
+@apiKey = VbyuCkHd-fcygWhWwCao5lbhd_VDO0CNLcNFdwsXseA
 
 ### Hello Client
 GET {{host}}/clients
@@ -21,5 +22,9 @@ Content-Type: {{contentType}}
 ### 랜덤 클라이언트 생성
 POST {{host}}/clients/random
 
-### 랜덤 클라이언트 생성
+###  클라이언트 정보 조회
 GET {{host}}/clients/{{id}}
+
+###  클라이언트 정보 조회
+GET {{host}}/api
+X-API-KEY: {{apiKey}}
