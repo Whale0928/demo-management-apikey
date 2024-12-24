@@ -1,6 +1,6 @@
 // core: base
 dependencies {
-
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}
