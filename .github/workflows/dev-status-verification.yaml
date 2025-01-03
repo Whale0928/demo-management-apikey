@@ -1,15 +1,20 @@
 name: dev-status-verification
 
 on:
-  push:
-    branches:
-      - dev
+  pull_request_review:
+    types: [ submitted ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  approved:
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This PR was approved"
+
   dev-build-verification:
     runs-on: ubuntu-latest
     steps:
