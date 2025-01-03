@@ -1,15 +1,9 @@
 name: build-verification
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
-    types:
-      - closed
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
