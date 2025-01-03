@@ -3,12 +3,7 @@ name: dev-status-verification
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
-    types:
-      - closed
+      - dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
