@@ -6,5 +6,5 @@ server:
 spring:
   profiles:
     include:
+      - security
       - rdb
-      - base
